@@ -17,9 +17,9 @@ import org.springframework.data.redis.core.BoundValueOperations;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
+import java.io.*;
 import java.net.URLEncoder;
+import java.util.concurrent.*;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -94,6 +94,85 @@ public class TestApplicationTests {
                 e.printStackTrace();
             }
         }
+
+    }
+
+    //字节流读取文件
+    @Test
+    public void testFile() throws IOException {
+        File file = new File("C:\\Users\\ZD\\Desktop\\学习笔记.txt");
+        long fileSize = file.length();
+        if(fileSize>Integer.MAX_VALUE){
+            System.out.println("file too big");
+            return;
+        }
+        FileInputStream fi = new FileInputStream(file);
+        byte[] buffer = new byte[(int)(fileSize)];
+        int offset = 0;
+        int numRead = 0;
+        while (offset < buffer.length
+                && (numRead = fi.read(buffer, offset, buffer.length - offset)) >= 0) {
+            offset += numRead;
+        }
+
+        if(offset !=buffer.length){
+            throw new IOException("Could not completely read file" + file.getName());
+        }
+        fi.close();
+        InputStreamReader isr = new InputStreamReader(new ByteArrayInputStream(buffer));
+
+        BufferedReader br = new BufferedReader(isr);
+
+        String line = "";
+        String content = "";
+        while ((line=br.readLine())!=null){
+            line +="\n";
+            content+=line;
+        }
+
+        String lines[] = content.split("\n");
+
+
+    }
+
+    class MyThread implements Runnable{
+
+        private int index;
+
+        public MyThread(int index){
+            this.index = index;
+        }
+
+        @Override
+        public void run() {
+            System.out.println("处理任务:"+index);
+        }
+    }
+
+    /**
+     * @Description: newFixedThreadPool使用测试
+     * @Param: []
+     * @return: void
+     * @Author: Mr.Wang
+     * @Date: 2020/4/13
+     */
+    @Test
+    public void testPool(){
+        long startTime = System.currentTimeMillis();
+
+        ExecutorService es = Executors.newFixedThreadPool(5);
+
+        for(int i=0;i<15;i++){
+            MyThread myThread = new MyThread(i);
+            es.execute(myThread);
+            try {
+                Thread.sleep(5000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+
+        es.shutdown();
 
     }
 
