@@ -2,6 +2,7 @@ package com.example.springboot.shiro.controller;
 
 import com.example.springboot.shiro.model.ResultMap;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -24,13 +25,18 @@ public class GuestController {
         this.resultMap = resultMap;
     }
 
-    @RequestMapping(value = "/enter",method = RequestMethod.GET)
-    public ResultMap login(){
-        return resultMap.success().message("欢迎进入，您的身份是游客");
-    }
+//    @RequestMapping(value = "/enter",method = RequestMethod.GET)
+//    public ResultMap login(){
+//        return resultMap.success().message("欢迎进入，您的身份是游客");
+//    }
 
     @RequestMapping(value = "/getMessage",method = RequestMethod.GET)
     public ResultMap submitLogin(){
         return resultMap.success().message("您拥有获得该接口的信息权限！");
+    }
+
+    @GetMapping("/welcome")
+    public ResultMap login() {
+        return resultMap.success().code(200).message("欢迎访问游客页面！");
     }
 }

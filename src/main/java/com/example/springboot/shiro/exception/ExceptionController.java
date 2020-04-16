@@ -14,18 +14,18 @@ import javax.security.auth.login.AccountException;
  * @author: Mr.Zhang
  * @create: 2020-04-15 16:09
  **/
-@RestControllerAdvice
-public class ExceptionController {
-
-    private final ResultMap resultMap;
-
-    @Autowired
-    public ExceptionController(ResultMap resultMap) {
-        this.resultMap = resultMap;
-    }
-
-    @ExceptionHandler(AccountException.class)
-    public ResultMap handleShiroException(Exception ex){
-        return resultMap.fail().message(ex.getMessage());
-    }
-}
+//@RestControllerAdvice
+//public class ExceptionController {
+//
+//    private final ResultMap resultMap;
+//
+//    @Autowired
+//    public ExceptionController(ResultMap resultMap) {
+//        this.resultMap = resultMap;
+//    }
+//
+//    @ExceptionHandler(AccountException.class)
+//    public ResultMap handleShiroException(Exception ex){
+//        return resultMap.fail().message(ex.getMessage());
+//    }
+//}

@@ -1,10 +1,15 @@
 package com.example.springboot.shiro.controller;
 
+import com.example.springboot.JWT.entity.JwtUser;
+import com.example.springboot.JWT.repository.JwtUserRepository;
 import com.example.springboot.shiro.model.ResultMap;
+import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import javax.transaction.Transactional;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @version V1.0
@@ -15,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
  **/
 @RestController
 @RequestMapping("/admin")
+@Transactional
 public class AdminController {
 
     private final ResultMap resultMap;
@@ -24,9 +30,34 @@ public class AdminController {
         this.resultMap = resultMap;
     }
 
+    @Autowired
+    private JwtUserRepository jwtUserRepository;
+
     @RequestMapping(value = "/getMessage", method = RequestMethod.GET)
     public ResultMap getMessage() {
         System.out.println("yes");
         return resultMap.success().message("您拥有管理员权限，可以获得该接口的信息！");
+    }
+
+    @GetMapping("/getUser")
+    @RequiresRoles("admin")
+    public ResultMap getUser() {
+        List<JwtUser> jwtUsers = jwtUserRepository.findAll();
+        List<String> list = new ArrayList<>();
+        for(JwtUser user:jwtUsers){
+        list.add(user.getUsername());
+        }
+        return resultMap.success().code(200).message(list);
+    }
+
+    /**
+     * 封号操作
+     */
+    @PostMapping("/banUser")
+    @RequiresRoles("admin")
+    public ResultMap updatePassword(String username) {
+        System.out.println("yes");
+        jwtUserRepository.deleteByUsername(1,username);
+        return resultMap.success().code(200).message("成功封号！");
     }
 }
