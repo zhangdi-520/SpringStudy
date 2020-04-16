@@ -30,8 +30,8 @@ public class Jobs {
     @Autowired
     DistributionLock distributionLock;
 
-    @Scheduled(fixedDelay = 5000)
-    //@Scheduled(cron = "${time.cron}")
+    //@Scheduled(fixedDelay = 5000)
+    @Scheduled(cron = "${time.cron}")
     public void fixedDelayJob(){
         String lockID = null;
         try{
