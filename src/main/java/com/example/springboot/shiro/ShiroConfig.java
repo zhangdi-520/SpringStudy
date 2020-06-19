@@ -38,8 +38,10 @@ public class ShiroConfig {
         shiroFilterFactoryBean.setSecurityManager(securityManager);
         shiroFilterFactoryBean.setUnauthorizedUrl("/unauthorized/无权限");
         Map<String,String> filterRuleMap = new HashMap<>();
+//        filterRuleMap.put("/**","anon");
         filterRuleMap.put("/**","jwt");
         filterRuleMap.put("/unauthorized/**","anon");
+
         shiroFilterFactoryBean.setFilterChainDefinitionMap(filterRuleMap);
         return shiroFilterFactoryBean;
 

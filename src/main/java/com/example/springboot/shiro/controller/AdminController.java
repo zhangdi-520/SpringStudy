@@ -3,6 +3,8 @@ package com.example.springboot.shiro.controller;
 import com.example.springboot.JWT.entity.JwtUser;
 import com.example.springboot.JWT.repository.JwtUserRepository;
 import com.example.springboot.shiro.model.ResultMap;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -18,6 +20,7 @@ import java.util.List;
  * @author: Mr.Zhang
  * @create: 2020-04-15 16:05
  **/
+@Api(tags = {"管理员接口"})
 @RestController
 @RequestMapping("/admin")
 @Transactional
@@ -33,6 +36,7 @@ public class AdminController {
     @Autowired
     private JwtUserRepository jwtUserRepository;
 
+    @ApiOperation(value = "获取管理员接口信息")
     @RequestMapping(value = "/getMessage", method = RequestMethod.GET)
     public ResultMap getMessage() {
         System.out.println("yes");

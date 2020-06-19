@@ -1,5 +1,7 @@
 package com.example.springboot.demo1;
 
+import com.example.springboot.Socket.Executor;
+import com.example.springboot.Socket.RuleExecutor;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -7,23 +9,33 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
-import org.assertj.core.util.DateUtil;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.redis.core.BoundValueOperations;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.web.servlet.MockMvc;
 
 import java.io.*;
 import java.net.URLEncoder;
-import java.util.concurrent.*;
+import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
+import static org.hamcrest.Matchers.containsString;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
 public class TestApplicationTests {
+
+    @Autowired
+    RuleExecutor ruleExecutor;
+
+    @Autowired
+    Map<String, Executor> executorMap;
 
     @Autowired
     ToUse toUse;
@@ -176,5 +188,23 @@ public class TestApplicationTests {
 
     }
 
+    @Test
+    public void testBasicHeader(){
+        Executor executor = executorMap.get("ruleExecutor");
+        executor.get();
+
+    }
+
+//    @Autowired
+//    private MockMvc mockMvc;
+//
+//
+//    @Test
+//    public void testHomePage() throws Exception{
+//        mockMvc.perform(get("/"))
+//                .andExpect(status().isOk())
+//                .andExpect(view().name("home"))
+//                .andExpect(content().string(containsString("Welcome to...")));
+//    }
 
 }

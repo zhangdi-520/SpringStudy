@@ -27,6 +27,7 @@ public class IndexController {
         return "你正在访问sourceB资源";
     }
 
+
     @MyLog
     @GetMapping("/sourceC/{source_name}")
     public String sourceC(@PathVariable("source_name")String sourceName){
