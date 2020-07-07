@@ -1,7 +1,14 @@
 package com.example.springboot.demo1;
 
+import com.alibaba.fastjson.JSONObject;
 import com.example.springboot.Socket.Executor;
 import com.example.springboot.Socket.RuleExecutor;
+import com.example.springboot.querydsl.entity.MoreBrand;
+import com.example.springboot.querydsl.entity.NewBrand;
+import com.example.springboot.querydsl.repository.BrandRepository;
+import com.example.springboot.querydsl.repository.MoreBrandRepository;
+import com.example.springboot.querydsl.repository.NewBrandRepository;
+import com.example.springboot.querydsl.service.DslUserService;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -9,13 +16,13 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
+import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.web.servlet.MockMvc;
 
 import java.io.*;
 import java.net.URLEncoder;
@@ -23,13 +30,19 @@ import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import static org.hamcrest.Matchers.containsString;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
 public class TestApplicationTests {
+
+    @Autowired
+    BrandRepository brandRepository;
+
+    @Autowired
+    NewBrandRepository newBrandRepository;
+
+    @Autowired
+    MoreBrandRepository moreBrandRepository;
 
     @Autowired
     RuleExecutor ruleExecutor;
@@ -56,7 +69,33 @@ public class TestApplicationTests {
 //        BoundValueOperations<String, String> boundValueOperations = stringRedisTemplate.boundValueOps("lalalahahahha");
 //        boundValueOperations.set("zhang wu ji ");
 //        stringRedisTemplate.delete("aaa");
-
+//        Optional<Brand> brand = brandRepository.findById(2032L);
+//        List<Category> categoryList = brand.get().getCategoryList();
+//        for (Category category:categoryList){
+//            System.out.println(category.toString());
+//        }
+//        MoreBrand moreBrand =null;
+//        if(brand.isPresent()){
+//            Brand brand1 = brand.get();
+//            if(brand1 instanceof MoreBrand){
+//                moreBrand = (MoreBrand)brand1;
+//            }
+//        }
+//        System.out.println(moreBrand.toString());
+//        NewBrand brand = new NewBrand();
+//        brand.setName("张小三");
+//        brand.setImage("1.jpg");
+//        brand.setLetter("z");
+//        newBrandRepository.save(brand);
+        MoreBrand moreBrand = new MoreBrand();
+        moreBrand.setLogo("xiaomi");
+        moreBrand.setName("小米手机");
+        moreBrand.setSeq("111");
+        moreBrand.setSize("12");
+        moreBrand.setImage("2.jpg");
+        moreBrand.setLetter("Z");
+        moreBrand.setId(123L);
+        moreBrandRepository.save(moreBrand);
     }
 
     //调用其他项目http请求
@@ -195,16 +234,23 @@ public class TestApplicationTests {
 
     }
 
-//    @Autowired
-//    private MockMvc mockMvc;
-//
-//
-//    @Test
-//    public void testHomePage() throws Exception{
-//        mockMvc.perform(get("/"))
-//                .andExpect(status().isOk())
-//                .andExpect(view().name("home"))
-//                .andExpect(content().string(containsString("Welcome to...")));
-//    }
+    @Autowired
+    DslUserService dslUserService ;
+
+    @Test
+    public void testConsumer(){
+        dslUserService.invokeFlow(data->{
+            System.out.println(data);
+        });
+    }
+
+    @Test
+    public void xmlToJson() throws FileNotFoundException {
+        File file = new File("src/main/resources/test.xml");
+        InputStream in = new FileInputStream(file);
+        System.out.println(in);
+//        String xml = IOUtils.toString(in);
+//        JSONObject xmlJSONObj = XML.toJSONObject(xml);
+    }
 
 }
