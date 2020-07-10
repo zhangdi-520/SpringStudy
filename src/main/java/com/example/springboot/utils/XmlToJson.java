@@ -1,18 +1,19 @@
 package com.example.springboot.utils;
 
 import com.alibaba.fastjson.JSONException;
+
 import com.google.common.base.Charsets;
 import com.google.common.io.ByteSource;
 import com.google.common.io.ByteStreams;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
+import org.dom4j.Element;
 import org.dom4j.io.SAXReader;
 import org.json.JSONObject;
 import org.json.XML;
 import org.springframework.core.io.ClassPathResource;
 
 import java.io.*;
-import java.net.InetAddress;
 
 
 /**
@@ -46,7 +47,7 @@ public class XmlToJson {
 //    }
 
     public static void main(String[] args) throws IOException, org.json.JSONException, DocumentException {
-//        xml2jsonString();
+//            xml2jsonString();
         String path = "test".concat(".xml");
         ClassPathResource resource = new ClassPathResource(path);
         ByteSource byteSource;
@@ -57,9 +58,15 @@ public class XmlToJson {
         String response = byteSource.asCharSource(Charsets.UTF_8).read();
         SAXReader reader = new SAXReader();
         Document document = reader.read(new ByteArrayInputStream(response.getBytes(Charsets.UTF_8)));
-        System.out.println(document.getRootElement().element("PRH").asXML());
-
-
+        Element PRHElement = document.getRootElement().element("PRH");
+//        System.out.println(document.getRootElement().element("PRH").asXML().toString());
+        JSONObject xmlJSONObj = XML.toJSONObject(PRHElement.asXML());
+        PRHElement.addElement("JSON").setText(xmlJSONObj.toString());
+//        System.out.println(PRHElement.asXML());
+        System.out.println(PRHElement.asXML());
+        com.alibaba.fastjson.JSONObject jsonObject = com.alibaba.fastjson.JSONObject.parseObject(PRHElement.element("JSON").getText());
+        System.out.println(jsonObject.getJSONObject("PRH").getJSONObject("PA01").getJSONObject("PA01A"));
+        System.out.println(jsonObject.getJSONObject("PRSA"));
 
 
 
